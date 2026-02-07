@@ -188,6 +188,30 @@
             transform: scale(0.95);
         }
 
+        .fab {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            width: 56px;
+            height: 56px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            box-shadow: 0 4px 12px var(--shadow);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 90;
+            transition: all 0.3s;
+        }
+
+        .fab:active {
+            transform: scale(0.9);
+        }
+
         .category-section {
             background: var(--card);
             border-radius: 12px;
@@ -244,7 +268,6 @@
             cursor: pointer;
             transition: all 0.2s;
             position: relative;
-            overflow: hidden;
         }
 
         .item:active {
@@ -291,21 +314,30 @@
             color: var(--text);
         }
 
-        .item-delete {
-            background: var(--danger);
-            color: white;
+        .item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .item-btn {
+            background: none;
             border: none;
-            padding: 8px 16px;
+            padding: 6px 10px;
             border-radius: 6px;
             font-size: 13px;
             font-weight: 600;
             cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.2s;
+            transition: all 0.2s;
         }
 
-        .item.show-delete .item-delete {
-            opacity: 1;
+        .item-edit {
+            background: var(--primary);
+            color: white;
+        }
+
+        .item-delete {
+            background: var(--danger);
+            color: white;
         }
 
         .empty-state {
@@ -383,6 +415,43 @@
             color: var(--text);
         }
 
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            background: var(--card);
+            color: var(--text);
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .modal-actions button {
+            flex: 1;
+        }
+
         .saved-list-item {
             padding: 16px;
             background: var(--background);
@@ -421,24 +490,6 @@
             cursor: pointer;
         }
 
-        .share-section {
-            margin-top: 20px;
-            padding: 16px;
-            background: var(--background);
-            border-radius: 8px;
-        }
-
-        .share-link {
-            width: 100%;
-            padding: 12px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 14px;
-            color: var(--text);
-            margin-top: 10px;
-        }
-
         @media (max-width: 480px) {
             .header h1 {
                 font-size: 20px;
@@ -457,7 +508,7 @@
 
         .toast {
             position: fixed;
-            bottom: 20px;
+            bottom: 90px;
             right: 50%;
             transform: translateX(50%);
             background: var(--text);
@@ -531,6 +582,30 @@
         </div>
     </div>
 
+    <!-- FAB button to add items -->
+    <button class="fab" onclick="app.showAddItemModal()" id="fabButton" style="display: none;">+</button>
+
+    <!-- Modal for adding/editing items -->
+    <div class="modal" id="itemModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">הוסף פריט חדש</h3>
+            </div>
+            <div class="form-group">
+                <label>שם הפריט</label>
+                <input type="text" id="itemNameInput" placeholder="לדוגמה: עגבניות">
+            </div>
+            <div class="form-group">
+                <label>מחלקה</label>
+                <select id="itemCategorySelect"></select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="app.saveItemFromModal()">שמור</button>
+                <button class="btn btn-secondary" onclick="app.closeItemModal()">בטל</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal for saved lists -->
     <div class="modal" id="savedListsModal">
         <div class="modal-content">
@@ -551,57 +626,57 @@
                 'פירות וירקות': {
                     icon: '🥬',
                     order: 1,
-                    keywords: ['עגבניות', 'מלפפון', 'חסה', 'פלפל', 'בצל', 'שום', 'גזר', 'תפוח', 'בננה', 'תפוז', 'אבטיח', 'מלון', 'תות', 'ענבים', 'אגס', 'אפרסק', 'שזיף', 'לימון', 'אבוקדו', 'תפוחי אדמה', 'בטטה', 'כרוב', 'ברוקולי', 'כרובית', 'תרד', 'פטרוזיליה', 'כוסברה', 'נענע', 'בזיליקום']
+                    keywords: ['עגבני', 'מלפפון', 'חסה', 'חס', 'פלפל', 'בצל', 'שום', 'גזר', 'תפוח', 'בננ', 'תפוז', 'אבטיח', 'מלון', 'תות', 'ענב', 'אגס', 'אפרסק', 'שזיף', 'לימון', 'אבוקדו', 'תפוח אדמה', 'תפוחי אדמה', 'בטט', 'כרוב', 'ברוקולי', 'כרובית', 'תרד', 'פטרוזיליה', 'כוסברה', 'נענע', 'בזיליקום', 'חציל', 'קישוא', 'דלעת', 'סלק', 'צנון', 'קולרבי', 'חזרת', 'רוקט', 'שעועי', 'אפונ', 'גמבה', 'במיה', 'ירק', 'פר']
                 },
                 'לחמים ומאפים': {
                     icon: '🍞',
                     order: 2,
-                    keywords: ['לחם', 'חלה', 'פיתה', 'לאפה', 'בגט', 'חמנייה', 'עוגיות', 'עוגה', 'קרואסון', 'מאפה']
+                    keywords: ['לחם', 'חלה', 'פיתה', 'פית', 'לאפה', 'בגט', 'חמני', 'עוגי', 'עוג', 'קרואסון', 'מאפ', 'טוסט', 'בייגל', 'בורקס', 'סמבוסק', 'רוגל']
                 },
                 'חלב וביצים': {
                     icon: '🥛',
                     order: 3,
-                    keywords: ['חלב', 'גבינה', 'יוגורט', 'קוטג', 'שמנת', 'חמאה', 'ביצים', 'לבנה', 'גבינת שמנת', 'פטה', 'צפתית', 'בולגרית', 'גאודה', 'עמק']
+                    keywords: ['חלב', 'גבינ', 'יוגורט', 'קוטג', 'שמנת', 'חמאה', 'ביצ', 'לבנה', 'פטה', 'צפתית', 'בולגרית', 'גאודה', 'עמק', 'תנובה', 'משק', 'גד', 'טרה', 'שטראוס', 'חלבי']
                 },
                 'בשר ודגים': {
                     icon: '🍗',
                     order: 4,
-                    keywords: ['בשר', 'עוף', 'הודו', 'בקר', 'כבש', 'טלה', 'נקניק', 'סלמי', 'נקניקיה', 'המבורגר', 'קבב', 'שניצל', 'דג', 'סלמון', 'טונה', 'דניס', 'בס', 'אמנון', 'בורי']
+                    keywords: ['בשר', 'עוף', 'הודו', 'בקר', 'כבש', 'טלה', 'נקניק', 'סלמי', 'המבורגר', 'קבב', 'שניצל', 'דג', 'סלמון', 'טונה', 'דניס', 'בס', 'אמנון', 'בורי', 'חזה', 'שוק', 'כנף', 'סטייק', 'פרגית', 'שיפוד', 'קציצ', 'נתח']
                 },
                 'קפואים': {
                     icon: '🧊',
                     order: 5,
-                    keywords: ['קפוא', 'גלידה', 'ירקות קפואים', 'פירות קפואים', 'פיצה קפואה', 'שניצל קפוא', 'בורקס קפוא', 'אפונה קפואה', 'תירס קפוא']
+                    keywords: ['קפוא', 'גלידה', 'ארטיק', 'איסקרים', 'קפוא']
                 },
                 'שימורים': {
                     icon: '🥫',
                     order: 6,
-                    keywords: ['שימורים', 'טונה', 'תירס', 'אפונה', 'חומוס משומר', 'עגבניות מרוסקות', 'זיתים', 'מלפפונים חמוצים', 'פלפלים קלויים']
+                    keywords: ['שימור', 'קופס', 'משומר', 'חמוצ', 'זית', 'קלוי', 'מרוסק']
                 },
                 'יבשים': {
                     icon: '🌾',
                     order: 7,
-                    keywords: ['אורז', 'פסטה', 'קוסקוס', 'בורגול', 'קמח', 'סוכר', 'פתיתים', 'קורנפלקס', 'מצות', 'פיתוח', 'קרקר', 'ביסלי', 'במבה', 'חטיף']
+                    keywords: ['אורז', 'פסטה', 'קוסקוס', 'בורגול', 'קמח', 'סוכר', 'פתית', 'קורנפלקס', 'מצ', 'קרקר', 'ביסלי', 'במבה', 'חטיף', 'שקד', 'אגוז', 'צימוק', 'קינואה', 'שיבולת', 'גרנולה', 'סוכרי', 'שוקולד']
                 },
                 'שמנים ורטבים': {
                     icon: '🫗',
                     order: 8,
-                    keywords: ['שמן', 'זית', 'קנולה', 'חמניות', 'קטשופ', 'מיונז', 'חרדל', 'טחינה', 'חומוס', 'ממרח', 'ריבה', 'דבש', 'רטב סויה', 'רטב צ\'ילי', 'רטב עגבניות']
+                    keywords: ['שמן', 'זית', 'קנולה', 'חמני', 'קטשופ', 'מיונז', 'חרדל', 'טחינה', 'חומוס', 'ממרח', 'ריב', 'דבש', 'רטב', 'חומץ', 'ויניגרט']
                 },
                 'משקאות': {
                     icon: '🧃',
                     order: 9,
-                    keywords: ['מים', 'מיץ', 'סודה', 'קולה', 'קוקה', 'ספרייט', 'פאנטה', 'בירה', 'יין', 'קפה', 'תה', 'שוקו']
+                    keywords: ['מים', 'מיץ', 'סודה', 'קולה', 'קוקה', 'ספרייט', 'פאנטה', 'בירה', 'יין', 'קפה', 'תה', 'שוקו', 'משק', 'נביע', 'פריגת', 'תפוזינה', 'וודקה', 'וויסקי', 'ליקר']
                 },
                 'ניקיון': {
                     icon: '🧹',
                     order: 10,
-                    keywords: ['סבון', 'ניקוי', 'אקונומיקה', 'סיף', 'מטליות', 'ספוג', 'אבקת כביסה', 'מרכך', 'מדיח', 'טישו', 'נייר טואלט', 'מגבונים']
+                    keywords: ['סבון', 'ניקוי', 'אקונומיקה', 'סיף', 'מטלי', 'ספוג', 'אבק', 'כביסה', 'מרכך', 'מדיח', 'טישו', 'נייר', 'טואלט', 'מגבון']
                 },
                 'תינוקות': {
                     icon: '👶',
                     order: 11,
-                    keywords: ['חיתול', 'תינוקות', 'מוצצים', 'בקבוק', 'מזון תינוקות', 'שמפו לתינוקות', 'קרם', 'אמבט']
+                    keywords: ['חיתול', 'תינוק', 'מוצץ', 'בקבוק', 'מזון תינוק', 'תינוק']
                 },
                 'אחר': {
                     icon: '📦',
@@ -613,27 +688,68 @@
             items: [],
             savedLists: [],
             frequentItems: {},
+            editingItemId: null,
 
             init() {
                 this.loadFromStorage();
                 this.checkDarkMode();
                 this.showSuggestions();
+                this.populateCategorySelect();
+            },
+
+            normalizeText(text) {
+                let normalized = text.toLowerCase().trim();
+                
+                // Remove common prefixes
+                normalized = normalized.replace(/^(חבילת|שקית|קופסת|בקבוק|צנצנת|קילו|ק"ג|גרם)\s+/g, '');
+                
+                // Remove common suffixes
+                normalized = normalized.replace(/\s+(קפוא|קפואים|טרי|טריים|אורגני|אורגנים)$/g, '');
+                
+                // Handle plural endings more aggressively
+                normalized = normalized.replace(/ים$/, '');  // מלפפונים → מלפפ
+                normalized = normalized.replace(/ות$/, '');  // עגבניות → עגבני
+                normalized = normalized.replace(/יות$/, '');  // עגבניות → עגבנ
+                normalized = normalized.replace(/ים$/, '');  // Second pass
+                normalized = normalized.replace(/ה$/, '');   // עגבניה → עגבני
+                
+                return normalized;
             },
 
             categorizeItem(itemName) {
-                const lowerItem = itemName.toLowerCase();
+                const normalized = this.normalizeText(itemName);
+                let bestMatch = { category: 'אחר', score: 0 };
                 
                 for (const [categoryName, categoryData] of Object.entries(this.categories)) {
                     if (categoryName === 'אחר') continue;
                     
                     for (const keyword of categoryData.keywords) {
-                        if (lowerItem.includes(keyword) || keyword.includes(lowerItem)) {
+                        const normalizedKeyword = this.normalizeText(keyword);
+                        
+                        // Exact match after normalization
+                        if (normalized === normalizedKeyword) {
                             return categoryName;
+                        }
+                        
+                        // Check if item starts with keyword
+                        if (normalized.startsWith(normalizedKeyword) || normalizedKeyword.startsWith(normalized)) {
+                            const score = 100;
+                            if (score > bestMatch.score) {
+                                bestMatch = { category: categoryName, score };
+                            }
+                        }
+                        
+                        // Contains match (bidirectional)
+                        if (normalized.includes(normalizedKeyword) || normalizedKeyword.includes(normalized)) {
+                            const score = 50;
+                            if (score > bestMatch.score) {
+                                bestMatch = { category: categoryName, score };
+                            }
                         }
                     }
                 }
                 
-                return 'אחר';
+                return bestMatch.category;
             },
 
             processInput() {
@@ -668,15 +784,18 @@
             render() {
                 const container = document.getElementById('categoriesContainer');
                 const emptyState = document.getElementById('emptyState');
+                const fabButton = document.getElementById('fabButton');
                 
                 if (this.items.length === 0) {
                     container.innerHTML = '';
                     emptyState.style.display = 'block';
+                    fabButton.style.display = 'none';
                     document.getElementById('statsBar').style.display = 'none';
                     return;
                 }
 
                 emptyState.style.display = 'none';
+                fabButton.style.display = 'flex';
                 document.getElementById('statsBar').style.display = 'flex';
                 
                 // Group items by category
@@ -710,13 +829,13 @@
                             <ul class="items-list">
                                 ${items.map(item => `
                                     <li class="item ${item.completed ? 'completed' : ''}" 
-                                        data-id="${item.id}"
-                                        onclick="app.toggleItem(${item.id})"
-                                        ontouchstart="app.startTouch(event, ${item.id})"
-                                        ontouchend="app.endTouch(event)">
-                                        <div class="item-checkbox"></div>
-                                        <div class="item-text">${item.name}</div>
-                                        <button class="item-delete" onclick="event.stopPropagation(); app.deleteItem(${item.id})">מחק</button>
+                                        data-id="${item.id}">
+                                        <div class="item-checkbox" onclick="app.toggleItem(${item.id})"></div>
+                                        <div class="item-text" onclick="app.toggleItem(${item.id})">${item.name}</div>
+                                        <div class="item-actions">
+                                            <button class="item-btn item-edit" onclick="app.editItem(${item.id})">✏️</button>
+                                            <button class="item-btn item-delete" onclick="app.deleteItem(${item.id})">🗑️</button>
+                                        </div>
                                     </li>
                                 `).join('')}
                             </ul>
@@ -725,24 +844,6 @@
                 }).join('');
 
                 this.updateStats();
-            },
-
-            touchTimer: null,
-            touchedItemId: null,
-
-            startTouch(event, itemId) {
-                this.touchedItemId = itemId;
-                this.touchTimer = setTimeout(() => {
-                    const item = document.querySelector(`[data-id="${itemId}"]`);
-                    if (item) {
-                        item.classList.add('show-delete');
-                        navigator.vibrate && navigator.vibrate(50);
-                    }
-                }, 500);
-            },
-
-            endTouch(event) {
-                clearTimeout(this.touchTimer);
             },
 
             toggleItem(itemId) {
@@ -759,10 +860,79 @@
             },
 
             deleteItem(itemId) {
-                this.items = this.items.filter(i => i.id !== itemId);
+                if (confirm('למחוק את הפריט?')) {
+                    this.items = this.items.filter(i => i.id !== itemId);
+                    this.saveToStorage();
+                    this.render();
+                    this.showToast('🗑️ הפריט הוסר');
+                }
+            },
+
+            editItem(itemId) {
+                this.editingItemId = itemId;
+                const item = this.items.find(i => i.id === itemId);
+                
+                document.getElementById('modalTitle').textContent = 'ערוך פריט';
+                document.getElementById('itemNameInput').value = item.name;
+                document.getElementById('itemCategorySelect').value = item.category;
+                
+                document.getElementById('itemModal').classList.add('show');
+            },
+
+            showAddItemModal() {
+                this.editingItemId = null;
+                document.getElementById('modalTitle').textContent = 'הוסף פריט חדש';
+                document.getElementById('itemNameInput').value = '';
+                document.getElementById('itemCategorySelect').value = 'אחר';
+                
+                document.getElementById('itemModal').classList.add('show');
+            },
+
+            closeItemModal() {
+                document.getElementById('itemModal').classList.remove('show');
+                this.editingItemId = null;
+            },
+
+            saveItemFromModal() {
+                const name = document.getElementById('itemNameInput').value.trim();
+                const category = document.getElementById('itemCategorySelect').value;
+                
+                if (!name) {
+                    this.showToast('אנא הזן שם פריט');
+                    return;
+                }
+
+                if (this.editingItemId) {
+                    // Edit existing item
+                    const item = this.items.find(i => i.id === this.editingItemId);
+                    item.name = name;
+                    item.category = category;
+                    this.showToast('✓ הפריט עודכן');
+                } else {
+                    // Add new item
+                    this.items.push({
+                        id: Date.now(),
+                        name: name,
+                        category: category,
+                        completed: false
+                    });
+                    this.frequentItems[name] = (this.frequentItems[name] || 0) + 1;
+                    this.showToast('✓ הפריט נוסף');
+                }
+
                 this.saveToStorage();
                 this.render();
-                this.showToast('🗑️ הפריט הוסר');
+                this.closeItemModal();
+            },
+
+            populateCategorySelect() {
+                const select = document.getElementById('itemCategorySelect');
+                const sorted = Object.entries(this.categories)
+                    .sort((a, b) => a[1].order - b[1].order);
+                
+                select.innerHTML = sorted.map(([name, data]) => 
+                    `<option value="${name}">${data.icon} ${name}</option>`
+                ).join('');
             },
 
             updateStats() {
@@ -910,20 +1080,6 @@
         // Initialize app
         document.addEventListener('DOMContentLoaded', () => {
             app.init();
-        });
-
-        // Install as PWA prompt
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            
-            // Show install hint after 3 seconds
-            setTimeout(() => {
-                if (confirm('רוצה להוסיף את האפליקציה למסך הבית לגישה מהירה?')) {
-                    deferredPrompt.prompt();
-                }
-            }, 3000);
         });
     </script>
 </body>

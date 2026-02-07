@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="סידור קניות">
+    <meta name="theme-color" content="#4CAF50">
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIteh15nXk9e515og16fXoNeZ15XXqiDXl9eb150iLAogICJzaG9ydF9uYW1lIjogIteh15nXk9e515og16fXoNeZ15XXqiIsCiAgImRlc2NyaXB0aW9uIjogIteh15PXqCDXkNen15XXnteY15kg16HXqNeZ16nXqiDXp9eg15nXldeqIiwKICAic3RhcnRfdXJsIjogIi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmNWY1ZjUiLAogICJ0aGVtZV9jb2xvciI6ICIjNENBRjUwIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLCUzQ3N2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxMDAgMTAwJyUzRSUzQ3RleHQgeT0nLjllbScgZm9udC1zaXplPSc5MCclM0UlRjAlOUYlOUIlOTIlM0MvdGV4dCUzRSUzQy9zdmclM0UiLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXQp9">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%234CAF50' rx='20'/%3E%3Ctext y='.9em' font-size='70' x='50%25' text-anchor='middle'%3E🛒%3C/text%3E%3C/svg%3E">
+    <title>סידור קניות חכם</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --danger: #f44336;
+            --background: #f5f5f5;
+            --card: #ffffff;
+            --text: #212121;
+            --text-secondary: #757575;
+            --border: #e0e0e0;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        body.dark-mode {
+            --primary: #66BB6A;
+            --primary-dark: #4CAF50;
+            --danger: #EF5350;
+            --background: #121212;
+            --card: #1E1E1E;
+            --text: #E0E0E0;
+            --text-secondary: #B0B0B0;
+            --border: #333333;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            padding-bottom: 80px;
+            transition: background-color 0.3s ease;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 8px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary-dark);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.95);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-icon {
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .input-section {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .input-section h3 {
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            background: var(--card);
+            color: var(--text);
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .suggestions-box {
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--background);
+            border-radius: 8px;
+            display: none;
+        }
+
+        .suggestions-box.show {
+            display: block;
+        }
+
+        .suggestions-box h4 {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .suggestion-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .chip {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chip:active {
+            background: var(--primary);
+            color: white;
+            transform: scale(0.95);
+        }
+
+        .category-section {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 6px var(--shadow);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .category-icon {
+            font-size: 28px;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--background);
+            border-radius: 12px;
+        }
+
+        .category-title {
+            flex: 1;
+        }
+
+        .category-title h3 {
+            font-size: 18px;
+            color: var(--text);
+        }
+
+        .category-count {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .items-list {
+            list-style: none;
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: var(--background);
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item:active {
+            transform: scale(0.98);
+        }
+
+        .item.completed {
+            opacity: 0.6;
+        }
+
+        .item.completed .item-text {
+            text-decoration: line-through;
+            color: var(--text-secondary);
+        }
+
+        .item-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            margin-left: 12px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .item.completed .item-checkbox {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .item.completed .item-checkbox::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .item-text {
+            flex: 1;
+            font-size: 16px;
+            color: var(--text);
+        }
+
+        .item-delete {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .item.show-delete .item-delete {
+            opacity: 1;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .stats-bar {
+            background: var(--card);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+            box-shadow: 0 2px 6px var(--shadow);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 400px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+            color: var(--text);
+        }
+
+        .saved-list-item {
+            padding: 16px;
+            background: var(--background);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .saved-list-item:active {
+            transform: scale(0.98);
+            background: var(--primary);
+            color: white;
+        }
+
+        .saved-list-info h4 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .saved-list-meta {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .delete-saved {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .share-section {
+            margin-top: 20px;
+            padding: 16px;
+            background: var(--background);
+            border-radius: 8px;
+        }
+
+        .share-link {
+            width: 100%;
+            padding: 12px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--text);
+            margin-top: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .container {
+                padding: 12px;
+            }
+
+            .category-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 24px;
+            }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 50%;
+            transform: translateX(50%);
+            background: var(--text);
+            color: var(--card);
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-size: 14px;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🛒 סידור קניות חכם</h1>
+        <div class="header-controls">
+            <button class="btn btn-primary" onclick="app.processInput()">✨ סדר רשימה</button>
+            <button class="btn btn-secondary" onclick="app.saveList()">💾 שמור רשימה</button>
+            <button class="btn btn-secondary" onclick="app.showSavedLists()">📋 רשימות שמורות</button>
+            <button class="btn-icon" onclick="app.toggleDarkMode()">🌙</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="input-section">
+            <h3>הדבק את רשימת הקניות מ-WhatsApp</h3>
+            <textarea id="inputText" placeholder="לדוגמה:
+עגבניות
+חלב
+לחם
+מלפפונים
+גבינה צהובה
+שמן זית
+תפוחי אדמה
+יוגורט
+ביצים"></textarea>
+            
+            <div class="suggestions-box" id="suggestionsBox">
+                <h4>💡 אולי שכחת?</h4>
+                <div class="suggestion-chips" id="suggestionChips"></div>
+            </div>
+        </div>
+
+        <div id="statsBar" style="display: none;" class="stats-bar">
+            <div class="stat">
+                <div class="stat-value" id="totalItems">0</div>
+                <div class="stat-label">פריטים</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="completedItems">0</div>
+                <div class="stat-label">נאספו</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="remainingItems">0</div>
+                <div class="stat-label">נותרו</div>
+            </div>
+        </div>
+
+        <div id="categoriesContainer"></div>
+
+        <div id="emptyState" class="empty-state">
+            <div class="empty-state-icon">📝</div>
+            <p>הדבק רשימת קניות מלמעלה ולחץ "סדר רשימה"</p>
+            <p style="margin-top: 8px; font-size: 14px;">האפליקציה תסדר הכל אוטומטית לפי מחלקות</p>
+        </div>
+    </div>
+
+    <!-- Modal for saved lists -->
+    <div class="modal" id="savedListsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📋 רשימות שמורות</h3>
+            </div>
+            <div id="savedListsContainer"></div>
+            <button class="btn btn-secondary" style="width: 100%; margin-top: 16px;" onclick="app.closeSavedLists()">סגור</button>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const app = {
+            categories: {
+                'פירות וירקות': {
+                    icon: '🥬',
+                    order: 1,
+                    keywords: ['עגבניות', 'מלפפון', 'חסה', 'פלפל', 'בצל', 'שום', 'גזר', 'תפוח', 'בננה', 'תפוז', 'אבטיח', 'מלון', 'תות', 'ענבים', 'אגס', 'אפרסק', 'שזיף', 'לימון', 'אבוקדו', 'תפוחי אדמה', 'בטטה', 'כרוב', 'ברוקולי', 'כרובית', 'תרד', 'פטרוזיליה', 'כוסברה', 'נענע', 'בזיליקום']
+                },
+                'לחמים ומאפים': {
+                    icon: '🍞',
+                    order: 2,
+                    keywords: ['לחם', 'חלה', 'פיתה', 'לאפה', 'בגט', 'חמנייה', 'עוגיות', 'עוגה', 'קרואסון', 'מאפה']
+                },
+                'חלב וביצים': {
+                    icon: '🥛',
+                    order: 3,
+                    keywords: ['חלב', 'גבינה', 'יוגורט', 'קוטג', 'שמנת', 'חמאה', 'ביצים', 'לבנה', 'גבינת שמנת', 'פטה', 'צפתית', 'בולגרית', 'גאודה', 'עמק']
+                },
+                'בשר ודגים': {
+                    icon: '🍗',
+                    order: 4,
+                    keywords: ['בשר', 'עוף', 'הודו', 'בקר', 'כבש', 'טלה', 'נקניק', 'סלמי', 'נקניקיה', 'המבורגר', 'קבב', 'שניצל', 'דג', 'סלמון', 'טונה', 'דניס', 'בס', 'אמנון', 'בורי']
+                },
+                'קפואים': {
+                    icon: '🧊',
+                    order: 5,
+                    keywords: ['קפוא', 'גלידה', 'ירקות קפואים', 'פירות קפואים', 'פיצה קפואה', 'שניצל קפוא', 'בורקס קפוא', 'אפונה קפואה', 'תירס קפוא']
+                },
+                'שימורים': {
+                    icon: '🥫',
+                    order: 6,
+                    keywords: ['שימורים', 'טונה', 'תירס', 'אפונה', 'חומוס משומר', 'עגבניות מרוסקות', 'זיתים', 'מלפפונים חמוצים', 'פלפלים קלויים']
+                },
+                'יבשים': {
+                    icon: '🌾',
+                    order: 7,
+                    keywords: ['אורז', 'פסטה', 'קוסקוס', 'בורגול', 'קמח', 'סוכר', 'פתיתים', 'קורנפלקס', 'מצות', 'פיתוח', 'קרקר', 'ביסלי', 'במבה', 'חטיף']
+                },
+                'שמנים ורטבים': {
+                    icon: '🫗',
+                    order: 8,
+                    keywords: ['שמן', 'זית', 'קנולה', 'חמניות', 'קטשופ', 'מיונז', 'חרדל', 'טחינה', 'חומוס', 'ממרח', 'ריבה', 'דבש', 'רטב סויה', 'רטב צ\'ילי', 'רטב עגבניות']
+                },
+                'משקאות': {
+                    icon: '🧃',
+                    order: 9,
+                    keywords: ['מים', 'מיץ', 'סודה', 'קולה', 'קוקה', 'ספרייט', 'פאנטה', 'בירה', 'יין', 'קפה', 'תה', 'שוקו']
+                },
+                'ניקיון': {
+                    icon: '🧹',
+                    order: 10,
+                    keywords: ['סבון', 'ניקוי', 'אקונומיקה', 'סיף', 'מטליות', 'ספוג', 'אבקת כביסה', 'מרכך', 'מדיח', 'טישו', 'נייר טואלט', 'מגבונים']
+                },
+                'תינוקות': {
+                    icon: '👶',
+                    order: 11,
+                    keywords: ['חיתול', 'תינוקות', 'מוצצים', 'בקבוק', 'מזון תינוקות', 'שמפו לתינוקות', 'קרם', 'אמבט']
+                },
+                'אחר': {
+                    icon: '📦',
+                    order: 99,
+                    keywords: []
+                }
+            },
+
+            items: [],
+            savedLists: [],
+            frequentItems: {},
+
+            init() {
+                this.loadFromStorage();
+                this.checkDarkMode();
+                this.showSuggestions();
+            },
+
+            categorizeItem(itemName) {
+                const lowerItem = itemName.toLowerCase();
+                
+                for (const [categoryName, categoryData] of Object.entries(this.categories)) {
+                    if (categoryName === 'אחר') continue;
+                    
+                    for (const keyword of categoryData.keywords) {
+                        if (lowerItem.includes(keyword) || keyword.includes(lowerItem)) {
+                            return categoryName;
+                        }
+                    }
+                }
+                
+                return 'אחר';
+            },
+
+            processInput() {
+                const input = document.getElementById('inputText').value.trim();
+                
+                if (!input) {
+                    this.showToast('אנא הזן רשימת קניות');
+                    return;
+                }
+
+                const lines = input.split('\n').filter(line => line.trim());
+                
+                this.items = lines.map((line, index) => {
+                    const itemName = line.trim().replace(/^[-•*]\s*/, '');
+                    
+                    // Update frequency
+                    this.frequentItems[itemName] = (this.frequentItems[itemName] || 0) + 1;
+                    
+                    return {
+                        id: Date.now() + index,
+                        name: itemName,
+                        category: this.categorizeItem(itemName),
+                        completed: false
+                    };
+                });
+
+                this.saveToStorage();
+                this.render();
+                this.showToast('✨ הרשימה סודרה בהצלחה!');
+            },
+
+            render() {
+                const container = document.getElementById('categoriesContainer');
+                const emptyState = document.getElementById('emptyState');
+                
+                if (this.items.length === 0) {
+                    container.innerHTML = '';
+                    emptyState.style.display = 'block';
+                    document.getElementById('statsBar').style.display = 'none';
+                    return;
+                }
+
+                emptyState.style.display = 'none';
+                document.getElementById('statsBar').style.display = 'flex';
+                
+                // Group items by category
+                const grouped = {};
+                this.items.forEach(item => {
+                    if (!grouped[item.category]) {
+                        grouped[item.category] = [];
+                    }
+                    grouped[item.category].push(item);
+                });
+
+                // Sort categories by order
+                const sortedCategories = Object.entries(grouped).sort((a, b) => {
+                    return this.categories[a[0]].order - this.categories[b[0]].order;
+                });
+
+                // Render
+                container.innerHTML = sortedCategories.map(([categoryName, items]) => {
+                    const categoryData = this.categories[categoryName];
+                    const activeItems = items.filter(i => !i.completed);
+                    
+                    return `
+                        <div class="category-section">
+                            <div class="category-header">
+                                <div class="category-icon">${categoryData.icon}</div>
+                                <div class="category-title">
+                                    <h3>${categoryName}</h3>
+                                    <div class="category-count">${activeItems.length} מתוך ${items.length} פריטים</div>
+                                </div>
+                            </div>
+                            <ul class="items-list">
+                                ${items.map(item => `
+                                    <li class="item ${item.completed ? 'completed' : ''}" 
+                                        data-id="${item.id}"
+                                        onclick="app.toggleItem(${item.id})"
+                                        ontouchstart="app.startTouch(event, ${item.id})"
+                                        ontouchend="app.endTouch(event)">
+                                        <div class="item-checkbox"></div>
+                                        <div class="item-text">${item.name}</div>
+                                        <button class="item-delete" onclick="event.stopPropagation(); app.deleteItem(${item.id})">מחק</button>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }).join('');
+
+                this.updateStats();
+            },
+
+            touchTimer: null,
+            touchedItemId: null,
+
+            startTouch(event, itemId) {
+                this.touchedItemId = itemId;
+                this.touchTimer = setTimeout(() => {
+                    const item = document.querySelector(`[data-id="${itemId}"]`);
+                    if (item) {
+                        item.classList.add('show-delete');
+                        navigator.vibrate && navigator.vibrate(50);
+                    }
+                }, 500);
+            },
+
+            endTouch(event) {
+                clearTimeout(this.touchTimer);
+            },
+
+            toggleItem(itemId) {
+                const item = this.items.find(i => i.id === itemId);
+                if (item) {
+                    item.completed = !item.completed;
+                    this.saveToStorage();
+                    this.render();
+                    
+                    if (item.completed) {
+                        this.showToast(`✓ ${item.name} נוסף לעגלה`);
+                    }
+                }
+            },
+
+            deleteItem(itemId) {
+                this.items = this.items.filter(i => i.id !== itemId);
+                this.saveToStorage();
+                this.render();
+                this.showToast('🗑️ הפריט הוסר');
+            },
+
+            updateStats() {
+                const total = this.items.length;
+                const completed = this.items.filter(i => i.completed).length;
+                const remaining = total - completed;
+
+                document.getElementById('totalItems').textContent = total;
+                document.getElementById('completedItems').textContent = completed;
+                document.getElementById('remainingItems').textContent = remaining;
+            },
+
+            saveList() {
+                if (this.items.length === 0) {
+                    this.showToast('אין רשימה לשמור');
+                    return;
+                }
+
+                const name = prompt('שם הרשימה:', 'קניות שבועיות');
+                if (!name) return;
+
+                const savedList = {
+                    id: Date.now(),
+                    name: name,
+                    date: new Date().toLocaleDateString('he-IL'),
+                    items: JSON.parse(JSON.stringify(this.items))
+                };
+
+                this.savedLists.unshift(savedList);
+                this.saveToStorage();
+                this.showToast('💾 הרשימה נשמרה!');
+            },
+
+            showSavedLists() {
+                const modal = document.getElementById('savedListsModal');
+                const container = document.getElementById('savedListsContainer');
+
+                if (this.savedLists.length === 0) {
+                    container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 40px 0;">אין רשימות שמורות</p>';
+                } else {
+                    container.innerHTML = this.savedLists.map(list => `
+                        <div class="saved-list-item" onclick="app.loadSavedList(${list.id})">
+                            <div class="saved-list-info">
+                                <h4>${list.name}</h4>
+                                <div class="saved-list-meta">${list.date} • ${list.items.length} פריטים</div>
+                            </div>
+                            <button class="delete-saved" onclick="event.stopPropagation(); app.deleteSavedList(${list.id})">מחק</button>
+                        </div>
+                    `).join('');
+                }
+
+                modal.classList.add('show');
+            },
+
+            closeSavedLists() {
+                document.getElementById('savedListsModal').classList.remove('show');
+            },
+
+            loadSavedList(listId) {
+                const list = this.savedLists.find(l => l.id === listId);
+                if (list) {
+                    this.items = JSON.parse(JSON.stringify(list.items)).map(item => ({
+                        ...item,
+                        completed: false,
+                        id: Date.now() + Math.random()
+                    }));
+                    this.saveToStorage();
+                    this.render();
+                    this.closeSavedLists();
+                    this.showToast(`📋 נטענה רשימת "${list.name}"`);
+                }
+            },
+
+            deleteSavedList(listId) {
+                this.savedLists = this.savedLists.filter(l => l.id !== listId);
+                this.saveToStorage();
+                this.showSavedLists();
+                this.showToast('🗑️ הרשימה נמחקה');
+            },
+
+            showSuggestions() {
+                const sorted = Object.entries(this.frequentItems)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 10)
+                    .map(([name]) => name);
+
+                if (sorted.length > 0) {
+                    const container = document.getElementById('suggestionChips');
+                    container.innerHTML = sorted.map(item => 
+                        `<div class="chip" onclick="app.addSuggestion('${item}')">${item}</div>`
+                    ).join('');
+                    document.getElementById('suggestionsBox').classList.add('show');
+                }
+            },
+
+            addSuggestion(itemName) {
+                const textarea = document.getElementById('inputText');
+                const current = textarea.value.trim();
+                textarea.value = current ? `${current}\n${itemName}` : itemName;
+                this.showToast(`➕ ${itemName} נוסף לרשימה`);
+            },
+
+            toggleDarkMode() {
+                document.body.classList.toggle('dark-mode');
+                const isDark = document.body.classList.contains('dark-mode');
+                localStorage.setItem('darkMode', isDark);
+                this.showToast(isDark ? '🌙 מצב לילה הופעל' : '☀️ מצב יום הופעל');
+            },
+
+            checkDarkMode() {
+                const isDark = localStorage.getItem('darkMode') === 'true';
+                if (isDark) {
+                    document.body.classList.add('dark-mode');
+                }
+            },
+
+            showToast(message) {
+                const toast = document.getElementById('toast');
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            },
+
+            saveToStorage() {
+                localStorage.setItem('groceryItems', JSON.stringify(this.items));
+                localStorage.setItem('savedLists', JSON.stringify(this.savedLists));
+                localStorage.setItem('frequentItems', JSON.stringify(this.frequentItems));
+            },
+
+            loadFromStorage() {
+                const items = localStorage.getItem('groceryItems');
+                const lists = localStorage.getItem('savedLists');
+                const frequent = localStorage.getItem('frequentItems');
+
+                if (items) this.items = JSON.parse(items);
+                if (lists) this.savedLists = JSON.parse(lists);
+                if (frequent) this.frequentItems = JSON.parse(frequent);
+
+                this.render();
+            }
+        };
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+
+        // Install as PWA prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show install hint after 3 seconds
+            setTimeout(() => {
+                if (confirm('רוצה להוסיף את האפליקציה למסך הבית לגישה מהירה?')) {
+                    deferredPrompt.prompt();
+                }
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
